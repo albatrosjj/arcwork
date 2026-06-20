@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcWork — AI Freelance Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #070d1a; color: #e0e0e0; min-height: 100vh; }
+        .header { background: #0a0f1a; border-bottom: 1px solid #1a2540; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 30px; height: 30px; background: #22c55e; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #000; font-weight: bold; }
+        .logo-text { font-size: 17px; font-weight: 600; color: #fff; }
+        .logo-badge { background: #0d2a1a; color: #22c55e; font-size: 11px; padding: 2px 8px; border-radius: 20px; border: 1px solid #22c55e44; }
+        .nav { display: flex; align-items: center; gap: 20px; }
+        .nav a { color: #666; font-size: 14px; text-decoration: none; transition: color 0.2s; }
+        .nav a:hover { color: #fff; }
+        .nav-github { background: #22c55e !important; color: #000 !important; padding: 7px 16px; border-radius: 7px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .nav-x { color: #fff !important; display: flex; align-items: center; gap: 6px; }
+        .hero { text-align: center; padding: 64px 20px 48px; }
+        .hero-badge { background: #0d2a1a; color: #22c55e; font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 1px solid #22c55e33; display: inline-block; margin-bottom: 22px; }
+        .hero h1 { font-size: 44px; font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 16px; }
+        .hero h1 span { color: #22c55e; }
+        .hero p { color: #888; font-size: 16px; max-width: 480px; margin: 0 auto 36px; line-height: 1.7; }
+        .stats { display: flex; justify-content: center; gap: 40px; }
+        .stat-item { text-align: center; }
+        .stat-value { color: #22c55e; font-size: 24px; font-weight: 700; }
+        .stat-label { color: #555; font-size: 12px; margin-top: 2px; }
+        .stat-divider { width: 1px; background: #1a2540; }
+        .main { max-width: 780px; margin: 0 auto; padding: 0 20px 60px; }
+        .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .how-card { background: #0f1829; border: 1px solid #1a2540; border-radius: 11px; padding: 20px; }
+        .how-icon { width: 38px; height: 38px; background: #0d2a1a; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+        .how-icon i { color: #22c55e; font-size: 18px; }
+        .how-title { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+        .how-desc { color: #555; font-size: 12px; line-height: 1.6; }
+        .job-card { background: #0f1829; border: 1px solid #1a2540; border-radius: 14px; padding: 30px; margin-bottom: 20px; }
+        .section-label { color: #555; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+        .task-select { display: flex; gap: 10px; margin-bottom: 22px; }
+        .task-btn { flex: 1; padding: 13px 16px; border-radius: 9px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: all 0.2s; border: 1.5px solid #1a2540; background: transparent; color: #555; }
+        .task-btn.active { border-color: #22c55e; background: #0d2a1a; color: #22c55e; }
+        .task-btn:hover:not(.active) { border-color: #2a3550; color: #888; }
+        textarea { width: 100%; background: #070d1a; border: 1px solid #1a2540; border-radius: 9px; padding: 14px 16px; color: #e0e0e0; font-size: 15px; resize: vertical; min-height: 120px; font-family: inherit; transition: border-color 0.2s; margin-bottom: 22px; }
+        textarea:focus { outline: none; border-color: #22c55e44; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; }
+        .escrow-note { display: flex; align-items: center; gap: 7px; color: #555; font-size: 13px; }
+        .escrow-note i { color: #22c55e; font-size: 14px; }
+        .submit-btn { background: #22c55e; color: #000; font-size: 15px; font-weight: 600; padding: 13px 28px; border-radius: 9px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .submit-btn:hover { background: #16a34a; }
+        .submit-btn:disabled { background: #1a2540; color: #444; cursor: not-allowed; }
+        .result-card { background: #0f1829; border: 1px solid #1a2540; border-radius: 14px; padding: 30px; display: none; margin-bottom: 20px; }
+        .result-card.show { display: block; }
+        .result-title { color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .step { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #0f1829; }
+        .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+        .step-dot.pending { background: #1a2540; color: #444; }
+        .step-dot.loading { background: #0d2a1a; color: #22c55e; animation: pulse 1.2s infinite; }
+        .step-dot.done { background: #0d2a1a; color: #22c55e; }
+        .step-dot.error { background: #2a1010; color: #ef4444; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .step-text { flex: 1; font-size: 14px; color: #888; }
+        .step-link { font-size: 12px; color: #22c55e; text-decoration: none; }
+        .answer-label { color: #555; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin: 20px 0 10px; }
+        .answer-box { background: #070d1a; border: 1px solid #22c55e33; border-radius: 9px; padding: 18px; font-size: 15px; color: #e0e0e0; line-height: 1.7; display: none; }
+        .answer-box.show { display: block; }
+        .error-msg { color: #ef4444; font-size: 14px; margin-top: 12px; display: none; }
+        .footer { border-top: 1px solid #1a2540; padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .footer-left { color: #444; font-size: 13px; }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a { color: #444; font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .footer-links a:hover { color: #22c55e; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <div class="logo-icon">&#9889;</div>
+        <span class="logo-text">ArcWork</span>
+        <span class="logo-badge">Arc Testnet</span>
+    </div>
+    <nav class="nav">
+        <a href="https://docs.arc.io" target="_blank">Docs</a>
+        <a href="https://testnet.arcscan.app/address/0xe7faaccb0746dbbc20e250546c28f9f4ca03a100" target="_blank">Explorer</a>
+        <a href="https://x.com/Albatros_0x" target="_blank" class="nav-x"><i class="fab fa-x-twitter"></i> @Albatros_0x</a>
+        <a href="https://github.com/albatrosjj/arcwork" target="_blank" class="nav-github"><i class="fab fa-github"></i> GitHub</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-badge">ERC-8004 + ERC-8183 &middot; Arc Blockchain</div>
+    <h1>AI Tasks, Paid in <span>USDC</span></h1>
+    <p>Submit a task, AI completes it, payment happens automatically on Arc blockchain via ERC-8183 escrow.</p>
+    <div class="stats">
+        <div class="stat-item"><div class="stat-value">0.48s</div><div class="stat-label">Finality</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><div class="stat-value">1 USDC</div><div class="stat-label">Per Task</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><div class="stat-value">100%</div><div class="stat-label">On-chain</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><div class="stat-value">#834167</div><div class="stat-label">Agent ID</div></div>
+    </div>
+</section>
+
+<main class="main">
+    <div class="how-grid">
+        <div class="how-card">
+            <div class="how-icon"><i class="fas fa-lock"></i></div>
+            <div class="how-title">USDC Locked</div>
+            <div class="how-desc">Payment locked in ERC-8183 escrow before task starts</div>
+        </div>
+        <div class="how-card">
+            <div class="how-icon"><i class="fas fa-robot"></i></div>
+            <div class="how-title">AI Completes</div>
+            <div class="how-desc">Claude AI processes your task and submits on-chain proof</div>
+        </div>
+        <div class="how-card">
+            <div class="how-icon"><i class="fas fa-coins"></i></div>
+            <div class="how-title">Auto Payment</div>
+            <div class="how-desc">USDC released to AI agent instantly upon completion</div>
+        </div>
+    </div>
+
+    <div class="job-card">
+        <div class="section-label">Select task</div>
+        <div class="task-select" style="flex-wrap:wrap; gap:10px;">
+            <button class="task-btn active" onclick="selectTask('summarize', this)" style="flex: 1 1 45%;">
+                <i class="fas fa-file-alt"></i> Summarize Text
+            </button>
+            <button class="task-btn" onclick="selectTask('translate', this)" style="flex: 1 1 45%;">
+                <i class="fas fa-language"></i> Translate
+            </button>
+        </div>
+        <div id="translate-options" style="display:none; margin-bottom:22px;">
+            <div class="section-label">From</div>
+            <select id="sourceLang" style="width:100%; background:#070d1a; border:1px solid #1a2540; border-radius:9px; padding:12px 16px; color:#e0e0e0; font-size:14px; margin-bottom:10px;">
+                <option value="English">English</option>
+                <option value="Turkish">Turkish</option>
+                <option value="German">German</option>
+                <option value="French">French</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Italian">Italian</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Russian">Russian</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Japanese">Japanese</option>
+            </select>
+            <div class="section-label">To</div>
+            <select id="targetLang" style="width:100%; background:#070d1a; border:1px solid #1a2540; border-radius:9px; padding:12px 16px; color:#e0e0e0; font-size:14px;">
+                <option value="Turkish">Turkish</option>
+                <option value="English">English</option>
+                <option value="German">German</option>
+                <option value="French">French</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Italian">Italian</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Russian">Russian</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Japanese">Japanese</option>
+            </select>
+        </div>
+        <div class="section-label">Your text</div>
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        <div class="card-footer">
+            <div class="escrow-note">
+                <i class="fas fa-shield-alt"></i> Secured by ERC-8183 escrow
+            </div>
+            <button class="submit-btn" onclick="submitJob()" id="submitBtn">
+                <i class="fas fa-paper-plane"></i> Submit &amp; Pay 1 USDC
+            </button>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <div class="result-card" id="resultCard">
+        <div class="result-title"><i class="fas fa-chart-line" style="color:#22c55e"></i> Job Progress</div>
+        <div id="steps"></div>
+        <div class="answer-label">AI Result</div>
+        <div class="answer-box" id="answerBox"></div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-left">Built on Arc Blockchain &middot; ERC-8004 + ERC-8183</div>
+    <div class="footer-links">
+        <a href="https://x.com/Albatros_0x" target="_blank"><i class="fab fa-x-twitter"></i> @Albatros_0x</a>
+        <a href="https://github.com/albatrosjj/arcwork" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://testnet.arcscan.app/address/0xe7faaccb0746dbbc20e250546c28f9f4ca03a100" target="_blank"><i class="fas fa-external-link-alt"></i> ArcScan</a>
+        <a href="https://docs.arc.io" target="_blank"><i class="fas fa-book"></i> Docs</a>
+    </div>
+</footer>
+
+<script>
+    var selectedTask = "translate";
+    var stepDefs = [
+        "Creating job on Arc blockchain...",
+        "Locking 1 USDC in escrow...",
+        "AI agent processing task...",
+        "Submitting deliverable on-chain...",
+        "Releasing USDC to agent..."
+    ];
+
+    function selectTask(task, btn) {
+        selectedTask = task;
+        document.querySelectorAll(".task-btn").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById("translate-options").style.display = task === "translate" ? "block" : "none";
+    }
+
+    function setStep(steps, index, status, tx) {
+        var icons = { pending: "○", loading: "◌", done: "✓", error: "✗" };
+        var dot = steps[index].querySelector(".step-dot");
+        dot.className = "step-dot " + status;
+        dot.textContent = icons[status];
+        if (tx) {
+            var a = steps[index].querySelector(".step-link");
+            if (!a) {
+                a = document.createElement("a");
+                a.className = "step-link";
+                a.target = "_blank";
+                a.textContent = "View TX";
+                steps[index].appendChild(a);
+            }
+            a.href = tx;
+        }
+    }
+
+    function submitJob() {
+        var text = document.getElementById("inputText").value.trim();
+        if (!text) { alert("Please enter some text!"); return; }
+
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("errorMsg").style.display = "none";
+        document.getElementById("answerBox").className = "answer-box";
+        document.getElementById("resultCard").className = "result-card show";
+
+        var stepsEl = document.getElementById("steps");
+        stepsEl.innerHTML = stepDefs.map(function(s) {
+            return '<div class="step"><div class="step-dot pending">○</div><div class="step-text">' + s + '</div></div>';
+        }).join("");
+        var steps = stepsEl.querySelectorAll(".step");
+
+        fetch("/job", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text: text,
+                task_type: selectedTask,
+                source_lang: document.getElementById("sourceLang") ? document.getElementById("sourceLang").value : "English",
+                target_lang: document.getElementById("targetLang") ? document.getElementById("targetLang").value : "Turkish"
+            })
+        }).then(function(res) {
+            var reader = res.body.getReader();
+            var decoder = new TextDecoder();
+
+            function read() {
+                reader.read().then(function(result) {
+                    if (result.done) {
+                        document.getElementById("submitBtn").disabled = false;
+                        return;
+                    }
+                    var lines = decoder.decode(result.value).split("\n").filter(function(l) { return l.startsWith("data: "); });
+                    lines.forEach(function(line) {
+                        try {
+                            var data = JSON.parse(line.slice(6));
+                            if (data.step !== undefined) {
+                                if (data.prev !== undefined && data.prev >= 0) setStep(steps, data.prev, "done");
+                                setStep(steps, data.step, data.status || "loading", data.tx);
+                            }
+                            if (data.result) {
+                                for (var i = 0; i < steps.length; i++) setStep(steps, i, "done");
+                                var box = document.getElementById("answerBox");
+                                box.textContent = data.result;
+                                box.className = "answer-box show";
+                            }
+                            if (data.error) {
+                                document.getElementById("errorMsg").textContent = "Error: " + data.error;
+                                document.getElementById("errorMsg").style.display = "block";
+                            }
+                        } catch(e) {}
+                    });
+                    read();
+                });
+            }
+            read();
+        }).catch(function(e) {
+            document.getElementById("errorMsg").textContent = "Error: " + e.message;
+            document.getElementById("errorMsg").style.display = "block";
+            document.getElementById("submitBtn").disabled = false;
+        });
+    }
+</script>
+</body>
+</html>
